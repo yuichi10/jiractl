@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path"
 
-	"github.com/mitchellh/go-homedir"
+	"go.uber.org/zap"
 
 	"github.com/spf13/cobra"
+	"github.com/yuichi10/jiractl/config"
 )
 
 var configFile string
@@ -24,15 +24,16 @@ func NewRootCmd() *cobra.Command {
 			return nil
 		},
 	}
+	cobra.OnInitialize(initConfig)
 	return cmd
 }
 
 func initConfig() {
-	home, err := homedir.Dir()
+	err := config.LoadConfig()
 	if err != nil {
+		zap.S().Error(err)
 		os.Exit(1)
 	}
-	configFile = path.Join(home, ".jiractl.yaml")
 }
 
 func Execute() {
