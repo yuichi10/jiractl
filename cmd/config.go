@@ -2,8 +2,16 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
+
+type Config struct {
+	Context []struct {
+		Name      string `yaml:"name"`
+		UserID    string `yaml:"userID"`
+		BasicAuth string `yaml:"basicAuth"`
+	} `yaml:"context"`
+	CurrentContext string `yaml:"currentContext"`
+}
 
 func NewConfigCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -15,9 +23,6 @@ func NewConfigCmd() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(NewSetContextCmd())
-	cmd.Flags().StringP("user", "u", "", "set login user name for jira")
-	viper.BindPFlag("login_user", cmd.Flags().Lookup("user"))
-	cmd.Flags().StringP("password", "p", "", "set login user password for jira")
-	viper.BindPFlag("login_password", cmd.Flags().Lookup("password"))
+
 	return cmd
 }
