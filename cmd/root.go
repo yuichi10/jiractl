@@ -25,6 +25,7 @@ func NewRootCmd() *cobra.Command {
 		},
 	}
 	cobra.OnInitialize(initConfig)
+	cmd.AddCommand(NewConfigCmd())
 	return cmd
 }
 

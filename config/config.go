@@ -5,14 +5,24 @@ import (
 	"os"
 	"path"
 
+	"github.com/ghodss/yaml"
 	"github.com/spf13/viper"
 
 	homedir "github.com/mitchellh/go-homedir"
 )
 
+type Config struct {
+	Context map[string]struct {
+		UserID    string `yaml:"userID"`
+		BasicAuth string `yaml:"basicAuth"`
+	} `yaml:"context"`
+	CurrentContext string `yaml:"currentContext"`
+}
+
 // LoadConfig load config file. If there is no config file
 // this create new config file
 func LoadConfig() error {
+	viper.SetConfigType("yaml")
 	configFile, err := filePath()
 	if err != nil {
 		return err
@@ -25,6 +35,24 @@ func LoadConfig() error {
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read config by viper %v: ", err)
 	}
+	return nil
+}
+
+func Preserve() error {
+	c := viper.AllSettings()
+	bs, err := yaml.Marshal(c)
+	if err != nil {
+		return fmt.Errorf("failed to preserve settings: %v", err)
+	}
+	fpath, err := filePath()
+	if err != nil {
+		return fmt.Errorf("failed to get config file path: %v", err)
+	}
+	f, err := os.OpenFile(fpath, os.O_WRONLY, 666)
+	if err != nil {
+		return fmt.Errorf("failed to open config file: %v", err)
+	}
+	f.Write(bs)
 	return nil
 }
 
