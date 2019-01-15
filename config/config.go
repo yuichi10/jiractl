@@ -19,6 +19,18 @@ type Config struct {
 	CurrentContext string `yaml:"currentContext"`
 }
 
+func CurrentContext() string {
+	return "currentContext"
+}
+
+func UserID(credentialID string) string {
+	return fmt.Sprintf("credentials.%s.userID", credentialID)
+}
+
+func BasicAuth(credentialID string) string {
+	return fmt.Sprintf("credentials.%s.basicAuth", credentialID)
+}
+
 // LoadConfig load config file. If there is no config file
 // this create new config file
 func LoadConfig() error {

@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/spf13/cobra"
+	configCmd "github.com/yuichi10/jiractl/cmd/config"
 	"github.com/yuichi10/jiractl/config"
 )
 
@@ -25,7 +26,7 @@ func NewRootCmd() *cobra.Command {
 		},
 	}
 	cobra.OnInitialize(initConfig)
-	cmd.AddCommand(NewConfigCmd())
+	cmd.AddCommand(configCmd.NewConfigCmd())
 	return cmd
 }
 
