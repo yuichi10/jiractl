@@ -1,4 +1,4 @@
-package cmd
+package config
 
 import (
 	"bufio"
@@ -20,9 +20,9 @@ var password string
 
 func NewSetContextCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-context",
-		Short: "set context info",
-		Long:  "Able to set context info by using this command",
+		Use:   "set-credentials",
+		Short: "set credential info",
+		Long:  "Able to set credentials info by using this command",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			zap.S().Info(args)
@@ -36,7 +36,7 @@ func NewSetContextCmd() *cobra.Command {
 	return cmd
 }
 
-func setLoginInfo(context string) error {
+func setLoginInfo(credentialID string) error {
 	if username == "" {
 		fmt.Print("login user: ")
 		stdin := bufio.NewScanner(os.Stdin)
@@ -52,8 +52,8 @@ func setLoginInfo(context string) error {
 		password = string(bytePassword)
 	}
 	basic := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
-	viper.Set(fmt.Sprintf("context.%s.userID", context), username)
-	viper.Set(fmt.Sprintf("context.%s.basicAuth", context), basic)
+	viper.Set(config.UserID(credentialID), username)
+	viper.Set(config.BasicAuth(credentialID), basic)
 
 	return nil
 }
