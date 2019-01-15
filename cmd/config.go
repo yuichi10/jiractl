@@ -4,15 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Config struct {
-	Context []struct {
-		Name      string `yaml:"name"`
-		UserID    string `yaml:"userID"`
-		BasicAuth string `yaml:"basicAuth"`
-	} `yaml:"context"`
-	CurrentContext string `yaml:"currentContext"`
-}
-
 func NewConfigCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",

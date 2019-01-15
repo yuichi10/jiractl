@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/base64"
 	"fmt"
 	"os"
 	"syscall"
@@ -9,6 +10,8 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/yuichi10/jiractl/config"
 	"go.uber.org/zap"
 )
 
@@ -23,7 +26,8 @@ func NewSetContextCmd() *cobra.Command {
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			zap.S().Info(args)
-			loginInfo(args[0])
+			setLoginInfo(args[0])
+			config.Preserve()
 			return nil
 		},
 	}
@@ -32,7 +36,7 @@ func NewSetContextCmd() *cobra.Command {
 	return cmd
 }
 
-func loginInfo(context string) error {
+func setLoginInfo(context string) error {
 	if username == "" {
 		fmt.Print("login user: ")
 		stdin := bufio.NewScanner(os.Stdin)
@@ -47,5 +51,9 @@ func loginInfo(context string) error {
 		}
 		password = string(bytePassword)
 	}
+	basic := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
+	viper.Set(fmt.Sprintf("context.%s.userID", context), username)
+	viper.Set(fmt.Sprintf("context.%s.basicAuth", context), basic)
+
 	return nil
 }
