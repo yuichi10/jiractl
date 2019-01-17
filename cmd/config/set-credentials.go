@@ -10,7 +10,6 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/yuichi10/jiractl/config"
 	"go.uber.org/zap"
 )
@@ -52,8 +51,7 @@ func setLoginInfo(credentialID string) error {
 		password = string(bytePassword)
 	}
 	basic := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
-	viper.Set(config.UserID(credentialID), username)
-	viper.Set(config.BasicAuth(credentialID), basic)
+	config.AddCredential(credentialID, username, basic)
 
 	return nil
 }
