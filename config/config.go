@@ -24,10 +24,6 @@ type Config struct {
 var conf *Config
 
 func AddCredential(credentName, userID, basicAuth string) {
-	if conf.Credentials == nil {
-		fmt.Println("this is null")
-		os.Exit(1)
-	}
 	conf.Credentials[credentName] = Credential{UserID: userID, BasicAuth: basicAuth}
 }
 
