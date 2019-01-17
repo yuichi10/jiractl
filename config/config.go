@@ -2,21 +2,33 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 
-	"github.com/ghodss/yaml"
-	"github.com/spf13/viper"
+	yaml "gopkg.in/yaml.v2"
 
 	homedir "github.com/mitchellh/go-homedir"
 )
 
+type Credential struct {
+	UserID    string `yaml:"userID"`
+	BasicAuth string `yaml:"basicAuth"`
+}
+
 type Config struct {
-	Context map[string]struct {
-		UserID    string `yaml:"userID"`
-		BasicAuth string `yaml:"basicAuth"`
-	} `yaml:"context"`
-	CurrentContext string `yaml:"currentContext"`
+	Credentials    map[string]Credential `yaml:"credentials"`
+	CurrentContext string                `yaml:"currentContext"`
+}
+
+var conf *Config
+
+func AddCredential(credentName, userID, basicAuth string) {
+	if conf.Credentials == nil {
+		fmt.Println("this is null")
+		os.Exit(1)
+	}
+	conf.Credentials[credentName] = Credential{UserID: userID, BasicAuth: basicAuth}
 }
 
 func CurrentContext() string {
@@ -34,25 +46,19 @@ func BasicAuth(credentialID string) string {
 // LoadConfig load config file. If there is no config file
 // this create new config file
 func LoadConfig() error {
-	viper.SetConfigType("yaml")
 	configFile, err := filePath()
 	if err != nil {
 		return err
 	}
-	err = initFile(configFile)
+	conf, err = initConfig(configFile)
 	if err != nil {
 		return err
-	}
-	viper.SetConfigFile(configFile)
-	if err := viper.ReadInConfig(); err != nil {
-		return fmt.Errorf("failed to read config by viper %v: ", err)
 	}
 	return nil
 }
 
 func Preserve() error {
-	c := viper.AllSettings()
-	bs, err := yaml.Marshal(c)
+	bs, err := yaml.Marshal(conf)
 	if err != nil {
 		return fmt.Errorf("failed to preserve settings: %v", err)
 	}
@@ -76,14 +82,35 @@ func filePath() (string, error) {
 	return path.Join(home, ".jiractl.yaml"), nil
 }
 
-func initFile(configFile string) error {
+func newConfig() *Config {
+	c := new(Config)
+	c.Credentials = make(map[string]Credential)
+	return c
+}
+
+func initConfig(configFile string) (*Config, error) {
 	if _, err := os.Stat(configFile); err != nil {
 		// os.OpenFile(configFile, os.O_WRONLY, 0666)
 		f, err := os.Create(configFile)
 		if err != nil {
-			return fmt.Errorf("failed to crate config file at %v: %v", configFile, err)
+			return nil, fmt.Errorf("failed to crate config file at %v: %v", configFile, err)
 		}
 		defer f.Close()
+		return newConfig(), nil
 	}
-	return nil
+	return readConfigFile(configFile)
+}
+
+func readConfigFile(filepath string) (*Config, error) {
+	f, err := os.Open(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open config file: %v", err)
+	}
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config file: %v", err)
+	}
+	c := newConfig()
+	yaml.Unmarshal(b, c)
+	return c, nil
 }
