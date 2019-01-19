@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"go.uber.org/zap"
-
 	"github.com/spf13/cobra"
 	configCmd "github.com/yuichi10/jiractl/cmd/config"
-	"github.com/yuichi10/jiractl/config"
+	// "github.com/yuichi10/jiractl/config"
 )
 
 var configFile string
@@ -31,11 +29,11 @@ func NewRootCmd() *cobra.Command {
 }
 
 func initConfig() {
-	err := config.LoadConfig()
-	if err != nil {
-		zap.S().Error(err)
-		os.Exit(1)
-	}
+	// err := config.LoadConfig()
+	// if err != nil {
+	// 	zap.S().Error(err)
+	// 	os.Exit(1)
+	// }
 }
 
 func Execute() {
