@@ -13,7 +13,8 @@ jobs:
       - restore_cache:
           keys:
             - vl-pkg-cache
-      - run: go build
+      - run: go mod init
+      # - run: go build
       - run:
           name: Run unit tests
           command: |
