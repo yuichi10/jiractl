@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/golang
+        environment:
+          GO111MODULE: "on"
     working_directory: /go/src/github.com/yuichi10/jiractl
 
     environment:
@@ -13,8 +15,6 @@ jobs:
       - restore_cache:
           keys:
             - vl-pkg-cache
-      - run: go mod init
-      # - run: go build
       - run:
           name: Run unit tests
           command: |
