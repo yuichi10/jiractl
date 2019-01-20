@@ -2,8 +2,9 @@ package entity
 
 // Credential have credential information of user
 type Credential struct {
-	UserID   string
-	Password string
+	UserID    string
+	BasicAuth string
+	Password  string
 }
 
 // Me has information of me user
