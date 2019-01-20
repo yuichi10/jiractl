@@ -1,26 +1,30 @@
 package controller
 
-import "github.com/yuichi10/jiractl/usecase"
+import (
+	"github.com/yuichi10/jiractl/interface/database"
+	"github.com/yuichi10/jiractl/usecase"
+)
 
-type Credential struct {
+type CredentialInput struct {
 	userName string
 	password string
 	credName string
 }
 
-func (c Credential) GetUserName() string {
+func (c CredentialInput) GetUserName() string {
 	return c.userName
 }
 
-func (c Credential) GetPassword() string {
+func (c CredentialInput) GetPassword() string {
 	return c.password
 }
 
-func (c Credential) GetCredentialName() string {
+func (c CredentialInput) GetCredentialName() string {
 	return c.credName
 }
 
-func SetCredentialController(credName, userName, password string) {
-	cred := Credential{credName: credName, userName: userName, password: password}
-	usecase.SetCredential(cred)
+func SetCredentialController(credName, userName, password string, ds database.IDataStore) {
+	credData := database.NewCredential(ds)
+	input := CredentialInput{userName: userName, password: password, credName: credName}
+	usecase.SetCredential(input, credData)
 }
