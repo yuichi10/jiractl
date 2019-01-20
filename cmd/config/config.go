@@ -2,9 +2,10 @@ package config
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/yuichi10/jiractl/interface/database"
 )
 
-func NewConfigCmd() *cobra.Command {
+func NewConfigCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "treat config settings",
@@ -13,7 +14,7 @@ func NewConfigCmd() *cobra.Command {
 			return nil
 		},
 	}
-	cmd.AddCommand(NewSetContextCmd())
+	cmd.AddCommand(NewSetContextCmd(ds))
 
 	return cmd
 }
