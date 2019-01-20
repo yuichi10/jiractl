@@ -3,22 +3,18 @@ package usecase
 import (
 	"encoding/base64"
 	"fmt"
-
-	"github.com/yuichi10/jiractl/entity"
 )
 
-type IAuth interface {
-	GetCredentialName() string
+type IAuthInput interface {
 	GetUserName() string
 	GetPassword() string
+	GetCredentialName() string
 }
 
-func basicToken(cred entity.Credential) string {
-	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", cred.UserID, cred.Password)))
+func basicToken(userID, password string) string {
+	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", userID, password)))
 }
 
-func SetCredential(ia IAuth) {
-	fmt.Println(ia.GetCredentialName())
-	fmt.Println(ia.GetUserName())
-	fmt.Println(ia.GetPassword())
+func SetCredential(ia IAuthInput, cda IConfigDataAcess) {
+	cda.AddCredential(ia.GetCredentialName(), ia.GetUserName(), basicToken(ia.GetUserName(), ia.GetPassword()))
 }
