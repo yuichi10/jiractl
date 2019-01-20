@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/yuichi10/jiractl/interface/controller"
+	"github.com/yuichi10/jiractl/interface/database"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -10,7 +11,7 @@ import (
 var username string
 var password string
 
-func NewSetContextCmd() *cobra.Command {
+func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-credentials",
 		Short: "set credential info",
@@ -20,7 +21,7 @@ func NewSetContextCmd() *cobra.Command {
 			zap.S().Info(args)
 			// setLoginInfo(args[0])
 			// config.Preserve()
-			controller.SetCredentialController(args[0], username, password)
+			controller.SetCredentialController(args[0], username, password, ds)
 			return nil
 		},
 	}

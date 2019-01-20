@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/yuichi10/jiractl/interface/database"
+
 	"github.com/spf13/cobra"
 	configCmd "github.com/yuichi10/jiractl/cmd/config"
 	// "github.com/yuichi10/jiractl/config"
@@ -11,7 +13,7 @@ import (
 
 var configFile string
 
-func NewRootCmd() *cobra.Command {
+func NewRootCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hugo",
 		Short: "Hugo is a very fast static site generator",
@@ -24,7 +26,7 @@ func NewRootCmd() *cobra.Command {
 		},
 	}
 	cobra.OnInitialize(initConfig)
-	cmd.AddCommand(configCmd.NewConfigCmd())
+	cmd.AddCommand(configCmd.NewConfigCmd(ds))
 	return cmd
 }
 
@@ -36,8 +38,8 @@ func initConfig() {
 	// }
 }
 
-func Execute() {
-	cmd := NewRootCmd()
+func Execute(ds database.IDataStore) {
+	cmd := NewRootCmd(ds)
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
