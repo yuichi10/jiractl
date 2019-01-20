@@ -53,7 +53,6 @@ func openConfig(configFile string) (*os.File, error) {
 
 func (y YamlHandler) Create(data interface{}) (string, error) {
 	fmt.Println("every data are store to yaml")
-	fmt.Println("create data %+v", data)
 	b, err := yaml.Marshal(data)
 	if err != nil {
 		// TODO: エラーを表示するpresenterを利用する
