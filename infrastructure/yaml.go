@@ -6,6 +6,9 @@ import (
 	"os"
 	"path"
 
+	"go.uber.org/zap"
+	"gopkg.in/yaml.v2"
+
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/yuichi10/jiractl/interface/database"
 )
@@ -49,8 +52,23 @@ func openConfig(configFile string) (*os.File, error) {
 }
 
 func (y YamlHandler) Create(data interface{}) (string, error) {
-	fmt.Println("store to yaml")
-	return "", nil
+	fmt.Println("every data are store to yaml")
+	fmt.Println("create data %+v", data)
+	b, err := yaml.Marshal(data)
+	if err != nil {
+		// TODO: エラーを表示するpresenterを利用する
+		zap.S().Errorf("failed to marshal data for create %v", err)
+		panic(err)
+	}
+	// make file empty
+	y.file.Truncate(0)
+	_, err = y.file.Write(b)
+	if err != nil {
+		// TODO: エラーを表示するpresenterを利用する
+		zap.S().Errorf("failed to create data for create %v", err)
+		panic(err)
+	}
+	return string(b), nil
 }
 
 func (y YamlHandler) Update(data interface{}) (string, error) {
