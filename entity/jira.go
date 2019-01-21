@@ -2,9 +2,15 @@ package entity
 
 // Credential have credential information of user
 type Credential struct {
+	Name      string
 	UserID    string
 	BasicAuth string
 	Password  string
+}
+
+type JiraURL struct {
+	Name string
+	URL  string
 }
 
 // Me has information of me user
