@@ -25,7 +25,7 @@ func NewConfig() *Config {
 	return config
 }
 
-func NewCredential(ds IDataStore) usecase.IConfigDataAcess {
+func NewCredential(ds IDataStore) usecase.ICredentialDataAccess {
 	return &Credential{DataStore: ds}
 }
 
