@@ -61,12 +61,13 @@ func (y YamlHandler) Create(data interface{}) (string, error) {
 	}
 	// make file empty
 	y.file.Truncate(0)
-	_, err = y.file.Write(b)
+	n, err := y.file.Write(b)
 	if err != nil {
 		// TODO: エラーを表示するpresenterを利用する
 		zap.S().Errorf("failed to create data for create %v", err)
 		panic(err)
 	}
+	zap.S().Infof("write byte length: %v", n)
 	return string(b), nil
 }
 
