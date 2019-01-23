@@ -14,19 +14,19 @@ import (
 )
 
 type YamlHandler struct {
-	file *os.File
+	filename string
 }
 
 func NewYamlHandelr() (database.IDataStore, error) {
-	configFile, err := filePath()
+	f, err := filePath()
 	if err != nil {
 		return nil, err
 	}
-	f, err := openConfig(configFile)
+	err = initConfigFile(f)
 	if err != nil {
 		return nil, err
 	}
-	yh := &YamlHandler{file: f}
+	yh := &YamlHandler{filename: f}
 	return yh, nil
 }
 
@@ -38,17 +38,16 @@ func filePath() (string, error) {
 	return path.Join(home, ".jiractl.yaml"), nil
 }
 
-func openConfig(configFile string) (*os.File, error) {
+func initConfigFile(configFile string) error {
 	if _, err := os.Stat(configFile); err != nil {
 		// os.OpenFile(configFile, os.O_WRONLY, 0666)
-		f, err := os.Create(configFile)
+		_, err := os.Create(configFile)
 		if err != nil {
-			return nil, fmt.Errorf("failed to crate config file at %v: %v", configFile, err)
+			return fmt.Errorf("failed to crate config file at %v: %v", configFile, err)
 		}
-
-		return f, nil
+		return nil
 	}
-	return os.OpenFile(configFile, os.O_RDWR|os.O_CREATE, 0666)
+	return nil
 }
 
 func (y YamlHandler) Create(data interface{}) (string, error) {
@@ -59,15 +58,12 @@ func (y YamlHandler) Create(data interface{}) (string, error) {
 		zap.S().Errorf("failed to marshal data for create %v", err)
 		panic(err)
 	}
-	// make file empty
-	y.file.Truncate(0)
-	n, err := y.file.Write(b)
+	err = ioutil.WriteFile(y.filename, b, 0666)
 	if err != nil {
 		// TODO: エラーを表示するpresenterを利用する
 		zap.S().Errorf("failed to create data for create %v", err)
 		panic(err)
 	}
-	zap.S().Infof("write byte length: %v", n)
 	return string(b), nil
 }
 
@@ -78,7 +74,7 @@ func (y YamlHandler) Update(data interface{}) (string, error) {
 }
 
 func (y YamlHandler) Read(data interface{}) (string, error) {
-	b, err := ioutil.ReadAll(y.file)
+	b, err := ioutil.ReadFile(y.filename)
 	if err != nil {
 		return "", fmt.Errorf("failed to read config file: %v", err)
 	}
@@ -86,5 +82,5 @@ func (y YamlHandler) Read(data interface{}) (string, error) {
 }
 
 func (y YamlHandler) Close() {
-	y.file.Close()
+	fmt.Println("close")
 }
