@@ -1,8 +1,14 @@
 package config
 
 import (
+	"bufio"
+	"fmt"
+	"os"
+	"syscall"
+
 	"github.com/yuichi10/jiractl/interface/controller"
 	"github.com/yuichi10/jiractl/interface/database"
+	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -21,6 +27,7 @@ func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
 			zap.S().Info(args)
 			// setLoginInfo(args[0])
 			// config.Preserve()
+			setLoginInfo()
 			controller.SetCredentialController(args[0], username, password, ds)
 			return nil
 		},
@@ -30,23 +37,20 @@ func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
 	return cmd
 }
 
-// func setLoginInfo(credentialID string) error {
-// 	if username == "" {
-// 		fmt.Print("login user: ")
-// 		stdin := bufio.NewScanner(os.Stdin)
-// 		stdin.Scan()
-// 		username = stdin.Text()
-// 	}
-// 	if password == "" {
-// 		fmt.Print("login password: ")
-// 		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
-// 		if err != nil {
-// 			return fmt.Errorf("failed to get password: %v", err)
-// 		}
-// 		password = string(bytePassword)
-// 	}
-// 	basic := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
-// 	config.AddCredential(credentialID, username, basic)
-
-// 	return nil
-// }
+func setLoginInfo() {
+	if username == "" {
+		fmt.Print("login user: ")
+		stdin := bufio.NewScanner(os.Stdin)
+		stdin.Scan()
+		username = stdin.Text()
+	}
+	if password == "" {
+		fmt.Print("login password: ")
+		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			zap.S().Errorf("failed to get password: %v", err)
+			panic(err)
+		}
+		password = string(bytePassword)
+	}
+}
