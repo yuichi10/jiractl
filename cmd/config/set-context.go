@@ -5,6 +5,11 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	user string
+	url  string
+)
+
 func NewSetContextCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-url",
@@ -16,5 +21,7 @@ func NewSetContextCmd() *cobra.Command {
 			return nil
 		},
 	}
+	cmd.Flags().StringVarP(&user, "user", "u", "", "set credential")
+	cmd.Flags().StringVarP(&url, "url", "U", "", "set url name (set-url cmd)")
 	return cmd
 }

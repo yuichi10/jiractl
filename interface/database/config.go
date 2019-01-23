@@ -16,10 +16,16 @@ type Credential struct {
 	BasicAuth      string     `yaml:"basicAuth"`
 }
 
+type Context struct {
+	User string `yaml:"user"`
+	Url  string `yaml:"url"`
+}
+
 type Config struct {
 	Credentials    map[string]Credential `yaml:"credentials"`
 	CurrentContext string                `yaml:"currentContext"`
 	JiraURLs       map[string]string     `yaml:"jiraURL"`
+	Context        map[string]Context    `yaml:"context"`
 }
 
 func NewConfig() *Config {
