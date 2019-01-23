@@ -17,7 +17,7 @@ import (
 var username string
 var password string
 
-func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
+func NewSetCredentialsCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-credentials",
 		Short: "set credential info",
