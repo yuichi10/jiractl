@@ -2,6 +2,8 @@ package config
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/yuichi10/jiractl/interface/controller"
+	"github.com/yuichi10/jiractl/interface/database"
 	"go.uber.org/zap"
 )
 
@@ -10,18 +12,19 @@ var (
 	url  string
 )
 
-func NewSetContextCmd() *cobra.Command {
+func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-url",
-		Short: "set jira api info",
-		Long:  "Able to set ipi nfo by using this command",
+		Use:   "set-context",
+		Short: "set context info",
+		Long:  "Able to set context info which include credential and jira url info",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			zap.S().Info(args)
+			controller.SetContext(args[0], user, url, ds)
 			return nil
 		},
 	}
-	cmd.Flags().StringVarP(&user, "user", "u", "", "set credential")
-	cmd.Flags().StringVarP(&url, "url", "U", "", "set url name (set-url cmd)")
+	cmd.Flags().StringVar(&user, "user", "", "set credential")
+	cmd.Flags().StringVar(&url, "url", "", "set url name (set-url cmd)")
 	return cmd
 }
