@@ -16,6 +16,12 @@ type IJiraURLInput interface {
 	GetName() string
 }
 
+type IContextInput interface {
+	GetName() string
+	GetJiraURLName() string
+	GetUser() string
+}
+
 func basicToken(userID, password string) string {
 	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", userID, password)))
 }
@@ -28,4 +34,8 @@ func SetCredential(ia IAuthInput, cda ICredentialDataAccess) {
 // SetJiraURL set url info to datastore
 func SetJiraURL(input IJiraURLInput, da IJiraURLDataAccess) {
 	da.AddJiraURL(input.GetName(), input.GetJiraURL())
+}
+
+func SetContext(input IContextInput, da IContextDataAccess) {
+	da.AddContext(input.GetName(), input.GetUser(), input.GetJiraURLName())
 }
