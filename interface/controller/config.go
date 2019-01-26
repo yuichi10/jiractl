@@ -46,5 +46,28 @@ func SetJiraURL(name, url string, ds database.IDataStore) {
 	urlData := database.NewJiraURL(ds)
 	input := &JiraURLInput{jiraURL: url, name: name}
 	usecase.SetJiraURL(input, urlData)
+}
 
+type ContextInput struct {
+	Name    string
+	User    string
+	jiraURL string
+}
+
+func (c ContextInput) GetName() string {
+	return c.Name
+}
+
+func (c ContextInput) GetUser() string {
+	return c.User
+}
+
+func (c ContextInput) GetJiraURLName() string {
+	return c.jiraURL
+}
+
+func SetContext(contextName, user, url string, ds database.IDataStore) {
+	contextData := database.NewContext(ds)
+	input := &ContextInput{Name: contextName, User: user, jiraURL: url}
+	usecase.SetContext(input, contextData)
 }
