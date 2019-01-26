@@ -13,6 +13,13 @@ type JiraURL struct {
 	URL  string
 }
 
+type Context struct {
+	Name      string
+	UserID    string
+	BasicAuth string
+	URL       string
+}
+
 // Me has information of me user
 type Me struct {
 	URL          string

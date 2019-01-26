@@ -9,3 +9,7 @@ type ICredentialDataAccess interface {
 type IJiraURLDataAccess interface {
 	AddJiraURL(name, url string) *entity.JiraURL
 }
+
+type IContextDataAccess interface {
+	AddContext(context, user, url string) *entity.Context
+}

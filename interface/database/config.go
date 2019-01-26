@@ -16,16 +16,25 @@ type Credential struct {
 	BasicAuth      string     `yaml:"basicAuth"`
 }
 
+type Context struct {
+	DataStore IDataStore `yaml:"-"`
+	Name      string     `yaml:"-"`
+	User      string     `yaml:"user"`
+	JiraUrl   string     `yaml:"url"`
+}
+
 type Config struct {
-	Credentials    map[string]Credential `yaml:"credentials"`
-	CurrentContext string                `yaml:"currentContext"`
-	JiraURLs       map[string]string     `yaml:"jiraURL"`
+	Credentials    map[string]*Credential `yaml:"credentials"`
+	CurrentContext string                 `yaml:"currentContext"`
+	JiraURLs       map[string]string      `yaml:"jiraURL"`
+	Context        map[string]*Context    `yaml:"context"`
 }
 
 func NewConfig() *Config {
 	config := new(Config)
-	config.Credentials = make(map[string]Credential)
+	config.Credentials = make(map[string]*Credential)
 	config.JiraURLs = make(map[string]string)
+	config.Context = make(map[string]*Context)
 	return config
 }
 
@@ -38,7 +47,7 @@ func (c *Credential) AddCredential(credentName, userID, basicAuth string) entity
 	c.UserID = userID
 	c.BasicAuth = basicAuth
 	conf := readAllConfig(c.DataStore)
-	conf.Credentials[credentName] = *c
+	conf.Credentials[credentName] = c
 	c.DataStore.Create(conf)
 	// TODO: 取ってきた値をきちんと変換して返すようにする
 	return entity.Credential{UserID: c.UserID, BasicAuth: c.BasicAuth}
@@ -63,6 +72,20 @@ func (j *JiraURL) AddJiraURL(name, url string) *entity.JiraURL {
 	j.DataStore.Create(c)
 	// TODO: 実際に帰ってきた値を返すようにする必要がある
 	return &entity.JiraURL{Name: name, URL: url}
+}
+
+func NewContext(ds IDataStore) *Context {
+	return &Context{DataStore: ds}
+}
+
+func (c *Context) AddContext(name, user, jiraURL string) *entity.Context {
+	c.Name = name
+	c.User = user
+	c.JiraUrl = jiraURL
+	conf := readAllConfig(c.DataStore)
+	conf.Context[c.Name] = c
+	c.DataStore.Create(conf)
+	return &entity.Context{Name: name, UserID: user, URL: jiraURL}
 }
 
 func readAllConfig(ds IDataStore) *Config {
