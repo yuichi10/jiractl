@@ -24,12 +24,14 @@ type Context struct {
 }
 
 type Config struct {
+	DataStore      IDataStore             `yaml:"-"`
 	Credentials    map[string]*Credential `yaml:"credentials"`
 	CurrentContext string                 `yaml:"currentContext"`
 	JiraURLs       map[string]string      `yaml:"jiraURL"`
 	Context        map[string]*Context    `yaml:"context"`
 }
 
+// TODO: NewConfigをdatasotreだけを持つConfigを、newConfigを作ってそっちがデータ全てを持つようにする
 func NewConfig() *Config {
 	config := new(Config)
 	config.Credentials = make(map[string]*Credential)
@@ -40,6 +42,14 @@ func NewConfig() *Config {
 
 func NewCredential(ds IDataStore) usecase.ICredentialDataAccess {
 	return &Credential{DataStore: ds}
+}
+
+func (c *Config) AddCredential(credentName, userID, basicAuth string) entity.Credential {
+	credent := &Credential{CredentialName: credentName, UserID: userID, BasicAuth: basicAuth}
+	c = readAllConfig(c.DataStore)
+	c.Credentials[credentName] = credent
+	c.DataStore.Create(c)
+	return entity.Credential{UserID: credent.UserID, BasicAuth: credent.BasicAuth}
 }
 
 func (c *Credential) AddCredential(credentName, userID, basicAuth string) entity.Credential {
@@ -61,6 +71,11 @@ type JiraURL struct {
 
 func NewJiraURL(ds IDataStore) *JiraURL {
 	return &JiraURL{DataStore: ds}
+}
+
+func (c *Config) AddJiraURL(name, url string) *entity.JiraURL {
+	c = readAllConfig(c.DataStore)
+	c.JiraURLs[name]
 }
 
 func (j *JiraURL) AddJiraURL(name, url string) *entity.JiraURL {
