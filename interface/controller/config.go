@@ -24,9 +24,9 @@ func (c CredentialInput) GetCredentialName() string {
 }
 
 func SetCredentialController(credName, userName, password string, ds database.IDataStore) {
-	credData := database.NewCredential(ds)
+	c := database.NewConfig(ds)
 	input := CredentialInput{userName: userName, password: password, credName: credName}
-	usecase.SetCredential(input, credData)
+	usecase.SetCredential(input, c)
 }
 
 type JiraURLInput struct {
@@ -43,9 +43,9 @@ func (j JiraURLInput) GetName() string {
 }
 
 func SetJiraURL(name, url string, ds database.IDataStore) {
-	urlData := database.NewJiraURL(ds)
+	c := database.NewConfig(ds)
 	input := &JiraURLInput{jiraURL: url, name: name}
-	usecase.SetJiraURL(input, urlData)
+	usecase.SetJiraURL(input, c)
 }
 
 type ContextInput struct {
@@ -67,7 +67,7 @@ func (c ContextInput) GetJiraURLName() string {
 }
 
 func SetContext(contextName, user, url string, ds database.IDataStore) {
-	contextData := database.NewContext(ds)
+	c := database.NewConfig(ds)
 	input := &ContextInput{Name: contextName, User: user, jiraURL: url}
-	usecase.SetContext(input, contextData)
+	usecase.SetContext(input, c)
 }
