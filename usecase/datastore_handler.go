@@ -13,3 +13,7 @@ type IJiraURLDataAccess interface {
 type IContextDataAccess interface {
 	AddContext(context, user, url string) *entity.Context
 }
+
+type ICurrentContextDataAccess interface {
+	AddCurrentContext(name string) *entity.Current
+}
