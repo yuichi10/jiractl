@@ -20,6 +20,13 @@ type Context struct {
 	URL       string
 }
 
+type Current struct {
+	ContextName string
+	UserID      string
+	URL         string
+	BasicAuth   string
+}
+
 // Me has information of me user
 type Me struct {
 	URL          string

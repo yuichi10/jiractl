@@ -71,3 +71,17 @@ func SetContext(contextName, user, url string, ds database.IDataStore) {
 	input := &ContextInput{Name: contextName, User: user, jiraURL: url}
 	usecase.SetContext(input, c)
 }
+
+type CurrentContextInput struct {
+	Name string
+}
+
+func (c CurrentContextInput) GetName() string {
+	return c.Name
+}
+
+func SetCurrentContext(contextName string, ds database.IDataStore) {
+	c := database.NewConfig(ds)
+	input := &ContextInput{Name: contextName}
+	usecase.SetCurrentContext(input, c)
+}

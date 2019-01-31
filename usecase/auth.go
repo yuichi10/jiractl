@@ -22,6 +22,10 @@ type IContextInput interface {
 	GetUser() string
 }
 
+type ICurrentContextInput interface {
+	GetName() string
+}
+
 func basicToken(userID, password string) string {
 	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", userID, password)))
 }
@@ -38,4 +42,8 @@ func SetJiraURL(input IJiraURLInput, da IJiraURLDataAccess) {
 
 func SetContext(input IContextInput, da IContextDataAccess) {
 	da.AddContext(input.GetName(), input.GetUser(), input.GetJiraURLName())
+}
+
+func SetCurrentContext(input ICurrentContextInput, da ICurrentContextDataAccess) {
+	da.AddCurrentContext(input.GetName())
 }

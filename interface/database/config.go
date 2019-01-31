@@ -62,6 +62,15 @@ func (c *Config) AddContext(name, user, jiraURL string) *entity.Context {
 	return &entity.Context{Name: name, UserID: user, URL: jiraURL}
 }
 
+func (c *Config) AddCurrentContext(name string) *entity.Current {
+	c.setAllConfigData()
+	c.CurrentContext = name
+	c.DataStore.Create(c)
+	context := c.Context[c.CurrentContext]
+	credential := c.Credentials[context.User]
+	return &entity.Current{ContextName: c.CurrentContext, UserID: context.User, URL: context.JiraUrl, BasicAuth: credential.BasicAuth}
+}
+
 func (c *Config) setAllConfigData() {
 	data, err := c.DataStore.Read("")
 	if err != nil {
