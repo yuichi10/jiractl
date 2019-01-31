@@ -16,6 +16,10 @@ jobs:
           keys:
             - vl-pkg-cache
       - run:
+          name: go lint
+          command: |
+            golint -set_exit_status
+      - run:
           name: Run unit tests
           command: |
             go test -race -coverprofile=profile.out -covermode=atomic ./...
