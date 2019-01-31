@@ -17,6 +17,7 @@ import (
 var username string
 var password string
 
+// NewSetCredentialsCmd return set-credentials command
 func NewSetCredentialsCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-credentials",

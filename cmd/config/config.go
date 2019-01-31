@@ -5,6 +5,7 @@ import (
 	"github.com/yuichi10/jiractl/interface/database"
 )
 
+// NewConfigCmd return config command
 func NewConfigCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",

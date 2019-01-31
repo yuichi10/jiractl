@@ -12,6 +12,7 @@ var (
 	url  string
 )
 
+// NewSetContextCmd return set-context command
 func NewSetContextCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-context",

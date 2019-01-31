@@ -8,11 +8,13 @@ type Credential struct {
 	Password  string
 }
 
+// JiraURL is jira url info
 type JiraURL struct {
 	Name string
 	URL  string
 }
 
+// Context is jira context info
 type Context struct {
 	Name      string
 	UserID    string
@@ -20,6 +22,7 @@ type Context struct {
 	URL       string
 }
 
+// Current is current context data
 type Current struct {
 	ContextName string
 	UserID      string
