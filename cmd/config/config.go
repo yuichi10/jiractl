@@ -17,5 +17,6 @@ func NewConfigCmd(ds database.IDataStore) *cobra.Command {
 	cmd.AddCommand(NewSetCredentialsCmd(ds))
 	cmd.AddCommand(NewSetURL(ds))
 	cmd.AddCommand(NewSetContextCmd(ds))
+	cmd.AddCommand(NewUseContextCmd(ds))
 	return cmd
 }
