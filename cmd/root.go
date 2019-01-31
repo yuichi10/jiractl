@@ -13,6 +13,7 @@ import (
 
 var configFile string
 
+// NewRootCmd return root comand
 func NewRootCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hugo",
@@ -38,6 +39,7 @@ func initConfig() {
 	// }
 }
 
+// Execute exec jiractl command
 func Execute(ds database.IDataStore) {
 	cmd := NewRootCmd(ds)
 	if err := cmd.Execute(); err != nil {

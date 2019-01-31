@@ -9,6 +9,7 @@ import (
 
 var jiraURL string
 
+// NewSetURL return set-url command
 func NewSetURL(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-url",

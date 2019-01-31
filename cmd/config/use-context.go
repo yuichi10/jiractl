@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// NewUseContextCmd return use-context command
 func NewUseContextCmd(ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "use-context",

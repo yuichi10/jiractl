@@ -13,11 +13,13 @@ import (
 	"github.com/yuichi10/jiractl/interface/database"
 )
 
+// YamlHandler is yaml datastore
 type YamlHandler struct {
 	filename string
 }
 
-func NewYamlHandelr() (database.IDataStore, error) {
+// NewYamlHandler return yaml datastore interface
+func NewYamlHandler() (database.IDataStore, error) {
 	f, err := filePath()
 	if err != nil {
 		return nil, err
@@ -50,6 +52,7 @@ func initConfigFile(configFile string) error {
 	return nil
 }
 
+// Create data in yaml
 func (y YamlHandler) Create(data interface{}) (string, error) {
 	fmt.Println("every data are store to yaml")
 	b, err := yaml.Marshal(data)
@@ -67,12 +70,14 @@ func (y YamlHandler) Create(data interface{}) (string, error) {
 	return string(b), nil
 }
 
+// Update update yaml data
 func (y YamlHandler) Update(data interface{}) (string, error) {
 	fmt.Println("update yaml data")
 	return "", nil
 
 }
 
+// Read all yaml data
 func (y YamlHandler) Read(data interface{}) (string, error) {
 	b, err := ioutil.ReadFile(y.filename)
 	if err != nil {
@@ -81,6 +86,7 @@ func (y YamlHandler) Read(data interface{}) (string, error) {
 	return string(b), nil
 }
 
+// Close yaml file
 func (y YamlHandler) Close() {
 	fmt.Println("close")
 }

@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Credential is credential data in datastore
 type Credential struct {
 	DataStore      IDataStore `yaml:"-"`
 	CredentialName string     `yaml:"-"`
@@ -13,13 +14,15 @@ type Credential struct {
 	BasicAuth      string     `yaml:"basicAuth"`
 }
 
+// Context is context data in datastore
 type Context struct {
 	DataStore IDataStore `yaml:"-"`
 	Name      string     `yaml:"-"`
 	User      string     `yaml:"user"`
-	JiraUrl   string     `yaml:"url"`
+	JiraURL   string     `yaml:"url"`
 }
 
+// Config is config data in datastore
 type Config struct {
 	DataStore      IDataStore             `yaml:"-"`
 	Credentials    map[string]*Credential `yaml:"credentials"`
@@ -28,6 +31,7 @@ type Config struct {
 	Context        map[string]*Context    `yaml:"context"`
 }
 
+// NewConfig return empty config
 func NewConfig(ds IDataStore) *Config {
 	config := new(Config)
 	config.DataStore = ds
@@ -37,6 +41,7 @@ func NewConfig(ds IDataStore) *Config {
 	return config
 }
 
+// AddCredential add credential data to datastore
 func (c *Config) AddCredential(credentName, userID, basicAuth string) entity.Credential {
 	credent := &Credential{CredentialName: credentName, UserID: userID, BasicAuth: basicAuth}
 	c.setAllConfigData()
@@ -45,6 +50,7 @@ func (c *Config) AddCredential(credentName, userID, basicAuth string) entity.Cre
 	return entity.Credential{UserID: credent.UserID, BasicAuth: credent.BasicAuth}
 }
 
+// AddJiraURL add jira data to datastore
 func (c *Config) AddJiraURL(name, url string) *entity.JiraURL {
 	c.setAllConfigData()
 	// TODO: すでにある名前のものは上書きされる
@@ -54,21 +60,23 @@ func (c *Config) AddJiraURL(name, url string) *entity.JiraURL {
 	return &entity.JiraURL{Name: name, URL: url}
 }
 
+// AddContext add context data to datastore
 func (c *Config) AddContext(name, user, jiraURL string) *entity.Context {
-	context := &Context{Name: name, User: user, JiraUrl: jiraURL}
+	context := &Context{Name: name, User: user, JiraURL: jiraURL}
 	c.setAllConfigData()
 	c.Context[name] = context
 	c.DataStore.Create(c)
 	return &entity.Context{Name: name, UserID: user, URL: jiraURL}
 }
 
+// AddCurrentContext add current context data to datastore
 func (c *Config) AddCurrentContext(name string) *entity.Current {
 	c.setAllConfigData()
 	c.CurrentContext = name
 	c.DataStore.Create(c)
 	context := c.Context[c.CurrentContext]
 	credential := c.Credentials[context.User]
-	return &entity.Current{ContextName: c.CurrentContext, UserID: context.User, URL: context.JiraUrl, BasicAuth: credential.BasicAuth}
+	return &entity.Current{ContextName: c.CurrentContext, UserID: context.User, URL: context.JiraURL, BasicAuth: credential.BasicAuth}
 }
 
 func (c *Config) setAllConfigData() {

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	ds, err := infrastructure.NewYamlHandelr()
+	ds, err := infrastructure.NewYamlHandler()
 	if err != nil {
 		fmt.Println("failed to open config file")
 		os.Exit(1)
