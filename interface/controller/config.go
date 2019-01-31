@@ -79,3 +79,9 @@ type CurrentContextInput struct {
 func (c CurrentContextInput) GetName() string {
 	return c.Name
 }
+
+func SetCurrentContext(contextName string, ds database.IDataStore) {
+	c := database.NewConfig(ds)
+	input := &ContextInput{Name: contextName}
+	usecase.SetCurrentContext(input, c)
+}
