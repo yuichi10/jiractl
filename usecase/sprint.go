@@ -1,5 +1,6 @@
 package usecase
 
-func ActiveSprintIssues() {
-
+// ActiveSprintIssues get apis
+func ActiveSprintIssues(api IJiraAPIAccess, presenter ISprintPresenter) {
+	api.GetActiveSprintIssues()
 }
