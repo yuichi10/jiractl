@@ -8,6 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	configCmd "github.com/yuichi10/jiractl/cmd/config"
+	sprintCmd "github.com/yuichi10/jiractl/cmd/sprint"
 	// "github.com/yuichi10/jiractl/config"
 )
 
@@ -28,6 +29,7 @@ func NewRootCmd(ds database.IDataStore) *cobra.Command {
 	}
 	cobra.OnInitialize(initConfig)
 	cmd.AddCommand(configCmd.NewConfigCmd(ds))
+	cmd.AddCommand(sprintCmd.NewSprintCmd())
 	return cmd
 }
 
