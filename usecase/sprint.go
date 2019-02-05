@@ -28,6 +28,14 @@ func GetSprintIssues(input ISprintIssuesInput, api IJiraAPIAccess, db ICurrentCo
 		zap.S().Errorf("failed to get sprint info: %v", err)
 		os.Exit(1)
 	}
+	issues, err := api.GetSprintIssuesInfo(c.JiraURL, c.BasicAuth, s.SprintID)
+	if err != nil {
+		zap.S().Errorf("failed to get sprint isses info: %v", err)
+		os.Exit(1)
+	}
 	fmt.Printf("%+v\n", board)
 	fmt.Printf("%+v\n", s)
+	for _, i := range issues {
+		fmt.Println(i.Summary)
+	}
 }

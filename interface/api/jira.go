@@ -92,3 +92,37 @@ func (c JiraAPIClient) GetSprintInfo(baseURL, basicAuth, sprintName string, boar
 	}
 	return nil, fmt.Errorf("there is no sprint")
 }
+
+// GetSprintIssuesInfo get sprint issues from jira api
+func (c JiraAPIClient) GetSprintIssuesInfo(baseURL, basicAuth string, sprintID int) ([]*entity.JiraIssue, error) {
+	uri, err := url.Parse(baseURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to base baseURL %q: %v", uri, err)
+	}
+	uri.Path = path.Join(uri.Path, "/rest/agile/1.0/sprint/", strconv.Itoa(sprintID), "issue")
+	zap.S().Infof("get sprint issues info url: %s", uri.String())
+	header := http.Header{}
+	header.Add("Authorization", fmt.Sprintf("Basic %s", basicAuth))
+	header.Add("Content-Type", "application/json")
+	res, statusCode, err := c.api.Get(uri.String(), "", url.Values{}, header)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get sprint issues info: %v", err)
+	}
+	issues := &JiraIssues{}
+	err = json.Unmarshal(res, issues)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal. status code %v, err: %v", statusCode, err)
+	}
+
+	data := make([]*entity.JiraIssue, 0, 50)
+	for _, is := range issues.Issues {
+		u, err := url.Parse(baseURL)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse url")
+		}
+		u.Path = path.Join(u.Path, "browse", is.Key)
+		data = append(data, &entity.JiraIssue{ID: is.ID, IssueType: is.Fields.Issuetype.Name, Summary: is.Fields.Summary,
+			Description: is.Fields.Description, AssigneeName: is.Fields.Assignee.Name, Status: is.Fields.Status.Name, URL: u.String()})
+	}
+	return data, nil
+}

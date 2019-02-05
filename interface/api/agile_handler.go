@@ -33,8 +33,8 @@ type JiraSprints struct {
 	} `json:"values"`
 }
 
-// Issues is information of jira  issue
-type Issues struct {
+// JiraIssues is information of jira  issue
+type JiraIssues struct {
 	Expand     string `json:"expand"`
 	StartAt    int    `json:"startAt"`
 	MaxResults int    `json:"maxResults"`
