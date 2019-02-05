@@ -2,15 +2,8 @@ package api
 
 import "time"
 
-// IAgileAPI is agile api interface of jira
-type IAgileAPI interface {
-	Boards()
-	Sprints()
-	SprintIssues()
-}
-
-// Boards is agile board list
-type Boards struct {
+// JiraBoards is agile board list
+type JiraBoards struct {
 	MaxResults int  `json:"maxResults"`
 	StartAt    int  `json:"startAt"`
 	IsLast     bool `json:"isLast"`

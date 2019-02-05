@@ -1,9 +1,11 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/yuichi10/jiractl/entity"
 	"go.uber.org/zap"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // Credential is credential data in datastore
@@ -77,6 +79,28 @@ func (c *Config) AddCurrentContext(name string) *entity.Current {
 	context := c.Context[c.CurrentContext]
 	credential := c.Credentials[context.User]
 	return &entity.Current{ContextName: c.CurrentContext, UserID: context.User, URL: context.JiraURL, BasicAuth: credential.BasicAuth}
+}
+
+func (c *Config) GetCurrentContext() (*entity.Current, error) {
+	c.setAllConfigData()
+	current := &entity.Current{}
+	context, ok := c.Context[c.CurrentContext]
+	if !ok {
+		return nil, fmt.Errorf("no context")
+	}
+	current.ContextName = c.CurrentContext
+	user, ok := c.Credentials[context.User]
+	if !ok {
+		return nil, fmt.Errorf("no user")
+	}
+	current.BasicAuth = user.BasicAuth
+	current.UserID = user.UserID
+	url, ok := c.JiraURLs[context.JiraURL]
+	if !ok {
+		return nil, fmt.Errorf("no url")
+	}
+	current.JiraURL = url
+	return current, nil
 }
 
 func (c *Config) setAllConfigData() {
