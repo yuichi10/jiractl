@@ -1,7 +1,13 @@
 package entity
 
-type Issue struct {
-	URL string
+type JiraIssue struct {
+	ID           string
+	IssueType    string
+	Summary      string
+	Description  string
+	AssigneeName string
+	Status       string
+	URL          string
 }
 
 type JiraSprint struct {
