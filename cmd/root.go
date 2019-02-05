@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/yuichi10/jiractl/interface/api"
 	"github.com/yuichi10/jiractl/interface/database"
 
 	"github.com/spf13/cobra"
@@ -15,7 +16,7 @@ import (
 var configFile string
 
 // NewRootCmd return root comand
-func NewRootCmd(ds database.IDataStore) *cobra.Command {
+func NewRootCmd(iapi api.IAPI, ds database.IDataStore) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hugo",
 		Short: "Hugo is a very fast static site generator",
@@ -29,7 +30,7 @@ func NewRootCmd(ds database.IDataStore) *cobra.Command {
 	}
 	cobra.OnInitialize(initConfig)
 	cmd.AddCommand(configCmd.NewConfigCmd(ds))
-	cmd.AddCommand(sprintCmd.NewSprintCmd())
+	cmd.AddCommand(sprintCmd.NewSprintCmd(iapi, ds))
 	return cmd
 }
 
@@ -42,8 +43,8 @@ func initConfig() {
 }
 
 // Execute exec jiractl command
-func Execute(ds database.IDataStore) {
-	cmd := NewRootCmd(ds)
+func Execute(iapi api.IAPI, ds database.IDataStore) {
+	cmd := NewRootCmd(iapi, ds)
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
