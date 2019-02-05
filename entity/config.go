@@ -28,6 +28,7 @@ type Current struct {
 	UserID      string
 	URL         string
 	BasicAuth   string
+	JiraURL     string
 }
 
 // Me has information of me user
