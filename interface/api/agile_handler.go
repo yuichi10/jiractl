@@ -8,15 +8,16 @@ type JiraBoards struct {
 	StartAt    int  `json:"startAt"`
 	IsLast     bool `json:"isLast"`
 	Values     []struct {
-		ID   int    `json:"id"`
-		Self string `json:"self"`
-		Name string `json:"name"`
-		Type string `json:"type"`
+		ID    int    `json:"id"`
+		Self  string `json:"self"`
+		Name  string `json:"name"`
+		State string `json:"state"`
+		Type  string `json:"type"`
 	} `json:"values"`
 }
 
-// Sprints is sprint list of jira
-type Sprints struct {
+// JiraSprints is sprint list of jira
+type JiraSprints struct {
 	MaxResults int  `json:"maxResults"`
 	StartAt    int  `json:"startAt"`
 	IsLast     bool `json:"isLast"`
