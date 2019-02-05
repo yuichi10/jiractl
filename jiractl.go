@@ -15,6 +15,7 @@ func main() {
 		fmt.Println("failed to open config file")
 		os.Exit(1)
 	}
+	apiClient := infrastructure.NewJiraAPIClient()
 	defer ds.Close()
-	cmd.Execute(ds)
+	cmd.Execute(apiClient, ds)
 }

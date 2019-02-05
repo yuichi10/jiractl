@@ -7,3 +7,8 @@ type Issue struct {
 type Sprint struct {
 	sprintID string
 }
+
+type JiraBoard struct {
+	ID   int
+	Name string
+}

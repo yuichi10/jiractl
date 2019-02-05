@@ -20,4 +20,5 @@ type IContextDataAccess interface {
 // ICurrentContextDataAccess is for add current context info
 type ICurrentContextDataAccess interface {
 	AddCurrentContext(name string) *entity.Current
+	GetCurrentContext() (*entity.Current, error)
 }
