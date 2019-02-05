@@ -4,8 +4,10 @@ type Issue struct {
 	URL string
 }
 
-type Sprint struct {
-	sprintID string
+type JiraSprint struct {
+	SprintID   int
+	SprintName string
+	State      string
 }
 
 type JiraBoard struct {
