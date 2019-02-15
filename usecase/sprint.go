@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"os"
 
 	"go.uber.org/zap"
@@ -33,9 +32,9 @@ func GetSprintIssues(input ISprintIssuesInput, api IJiraAPIAccess, db ICurrentCo
 		zap.S().Errorf("failed to get sprint isses info: %v", err)
 		os.Exit(1)
 	}
-	output := make([]*IssuesOutput, 0, 15)
+	output := make(IssuesOutput, 0, 15)
 	for _, issue := range issues {
-		o := &IssuesOutput{
+		o := &IssueOutput{
 			IssueType: issue.IssueType,
 			Summary:   issue.Summary,
 			Assignee:  issue.AssigneeName,
@@ -44,10 +43,5 @@ func GetSprintIssues(input ISprintIssuesInput, api IJiraAPIAccess, db ICurrentCo
 		}
 		output = append(output, o)
 	}
-	presenter.Present(output)
-	fmt.Printf("%+v\n", board)
-	fmt.Printf("%+v\n", s)
-	for _, i := range issues {
-		fmt.Println(i.Summary)
-	}
+	presenter.IssuePresent(output, "markdown")
 }

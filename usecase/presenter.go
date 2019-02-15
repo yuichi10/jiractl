@@ -1,8 +1,17 @@
 package usecase
 
-import "os"
+type Line struct {
+	Body      string
+	Color     string
+	Delimiter string
+}
+type Lines []*Line
 
-type IssuesOutput struct {
+type Presenter interface {
+	Present(Lines)
+}
+
+type IssueOutput struct {
 	IssueType string
 	Summary   string
 	Assignee  string
@@ -10,8 +19,8 @@ type IssuesOutput struct {
 	URL       string
 }
 
+type IssuesOutput []*IssueOutput
+
 type IIssuePresenter interface {
-	Present(out []*IssuesOutput)
-	Format() string
-	File() *os.File
+	IssuePresent(out IssuesOutput, format string)
 }
