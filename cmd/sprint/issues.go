@@ -5,18 +5,19 @@ import (
 	"github.com/yuichi10/jiractl/interface/api"
 	"github.com/yuichi10/jiractl/interface/controller"
 	"github.com/yuichi10/jiractl/interface/database"
+	"github.com/yuichi10/jiractl/interface/presenter"
 )
 
 var board string
 var sprint string
 
-func NewIssueCmd(iapi api.IAPI, ds database.IDataStore) *cobra.Command {
+func NewIssueCmd(format string, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "issues",
 		Short: "list sprint related issues",
 		Long:  "get sprint issues",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			controller.GetSprintIssue(board, sprint, iapi, ds)
+			controller.GetSprintIssue(board, sprint, format, iapi, ds, viewer)
 			return nil
 		},
 	}
