@@ -7,7 +7,7 @@ import (
 	"path"
 
 	"go.uber.org/zap"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/yuichi10/jiractl/interface/database"
@@ -88,5 +88,4 @@ func (y YamlHandler) Read(data interface{}) (string, error) {
 
 // Close yaml file
 func (y YamlHandler) Close() {
-	fmt.Println("close")
 }

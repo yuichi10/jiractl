@@ -4,9 +4,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/yuichi10/jiractl/interface/api"
 	"github.com/yuichi10/jiractl/interface/database"
+	"github.com/yuichi10/jiractl/interface/presenter"
 )
 
-func NewSprintCmd(iapi api.IAPI, ds database.IDataStore) *cobra.Command {
+var format string
+
+func NewSprintCmd(iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sprint",
 		Short: "do sprint related thing",
@@ -15,6 +18,7 @@ func NewSprintCmd(iapi api.IAPI, ds database.IDataStore) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.AddCommand(NewIssueCmd(iapi, ds))
+	cmd.PersistentFlags().StringVar(&format, "format", "markdown", "add format for output")
+	cmd.AddCommand(NewIssueCmd(format, iapi, ds, viewer))
 	return cmd
 }
