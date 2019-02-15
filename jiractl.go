@@ -6,6 +6,7 @@ import (
 
 	"github.com/yuichi10/jiractl/cmd"
 	"github.com/yuichi10/jiractl/infrastructure"
+	"github.com/yuichi10/jiractl/infrastructure/view"
 	_ "github.com/yuichi10/jiractl/logger"
 )
 
@@ -16,6 +17,8 @@ func main() {
 		os.Exit(1)
 	}
 	apiClient := infrastructure.NewJiraAPIClient()
+
+	viewer := view.NewStdoutViewer()
 	defer ds.Close()
-	cmd.Execute(apiClient, ds)
+	cmd.Execute(apiClient, ds, viewer)
 }
