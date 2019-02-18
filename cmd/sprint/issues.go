@@ -22,6 +22,6 @@ func NewIssueCmd(format string, iapi api.IAPI, ds database.IDataStore, viewer pr
 		},
 	}
 	cmd.Flags().StringVarP(&board, "board", "b", "", "set board name")
-	cmd.Flags().StringVarP(&sprint, "sprint", "s", "", "set sprint name")
+	cmd.Flags().StringVarP(&sprint, "sprint", "s", "", "set sprint name. If you do not set, you got active sprint issues")
 	return cmd
 }
