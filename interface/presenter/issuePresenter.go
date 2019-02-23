@@ -12,13 +12,14 @@ import (
 type SprintPresenter struct {
 	View   Viewer
 	Format string
+	Detail bool
 }
 
 func NewSprintPresenter(v Viewer, format string) SprintPresenter {
 	return SprintPresenter{View: v, Format: format}
 }
 
-func (ip SprintPresenter) IssuePresent(out usecase.IssuesOutput, format string) {
+func (ip SprintPresenter) IssuePresent(out usecase.IssuesOutput, format string, detail bool) {
 	humble := Lines{}
 	if format == "markdown" {
 		humble = markdownIssuePresenter(out)

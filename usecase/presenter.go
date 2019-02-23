@@ -22,5 +22,5 @@ type IssueOutput struct {
 type IssuesOutput []*IssueOutput
 
 type IIssuePresenter interface {
-	IssuePresent(out IssuesOutput, format string)
+	IssuePresent(out IssuesOutput, format string, detail bool)
 }

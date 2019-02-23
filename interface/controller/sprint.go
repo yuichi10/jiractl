@@ -10,6 +10,7 @@ import (
 type SprintIssueInput struct {
 	Board  string
 	Sprint string
+	Detail bool
 }
 
 func (input SprintIssueInput) GetBoardName() string {
@@ -20,11 +21,16 @@ func (input SprintIssueInput) GetSprintName() string {
 	return input.Sprint
 }
 
-func GetSprintIssue(board, sprint, format string, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) {
+func (input SprintIssueInput) RequireDetail() bool {
+	return input.Detail
+}
+
+func GetSprintIssue(board, sprint, format string, detail bool, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) {
 	input := SprintIssueInput{Board: board, Sprint: sprint}
 	a := api.NewJiraAPI(iapi)
 	db := database.NewConfig(ds)
 	p := presenter.NewSprintPresenter(viewer, format)
+
 	// call usecase
 	usecase.GetSprintIssues(input, a, db, p)
 }

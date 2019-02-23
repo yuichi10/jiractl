@@ -10,6 +10,7 @@ import (
 
 var board string
 var sprint string
+var detail bool
 
 func NewIssueCmd(format string, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) *cobra.Command {
 	cmd := &cobra.Command{
@@ -21,6 +22,7 @@ func NewIssueCmd(format string, iapi api.IAPI, ds database.IDataStore, viewer pr
 			return nil
 		},
 	}
+	cmd.Flags().BoolVar(&detail, "detail", false, "show detail data")
 	cmd.Flags().StringVarP(&board, "board", "b", "", "set board name")
 	cmd.Flags().StringVarP(&sprint, "sprint", "s", "", "set sprint name. If you do not set, you got active sprint issues")
 	return cmd
