@@ -22,12 +22,12 @@ func NewSprintPresenter(v Viewer, format string) SprintPresenter {
 func (ip SprintPresenter) IssuePresent(out usecase.IssuesOutput, format string, detail bool) {
 	humble := Lines{}
 	if format == "markdown" {
-		humble = markdownIssuePresenter(out)
+		humble = markdownIssuePresenter(out, detail)
 	}
 	ip.View.Show(humble)
 }
 
-func markdownIssuePresenter(out usecase.IssuesOutput) Lines {
+func markdownIssuePresenter(out usecase.IssuesOutput, detail bool) Lines {
 	humble := make(Lines, 0, 50)
 	sort.SliceStable(out, func(i, j int) bool { return out[i].Status < out[j].Status })
 	sort.SliceStable(out, func(i, j int) bool {
@@ -39,7 +39,11 @@ func markdownIssuePresenter(out usecase.IssuesOutput) Lines {
 	var issueOnce sync.Once
 	for _, issue := range out {
 		l := &Line{}
-		l.Body = fmt.Sprintf("[%s](%s) %s %s", issue.Summary, issue.URL, issue.Status, issue.Assignee)
+		if detail {
+			l.Body = fmt.Sprintf("[%s](%s) %s %s", issue.Summary, issue.URL, issue.Status, issue.Assignee)
+		} else {
+			l.Body = fmt.Sprintf("[%s][%s]", issue.Summary, issue.URL)
+		}
 		l.Delimiter = "\n"
 		if issue.IssueType == "ストーリー" || issue.IssueType == "Story" {
 			storyOnce.Do(func() { humble = append(humble, &Line{Body: "Story", Color: "97", Delimiter: "\n"}) })

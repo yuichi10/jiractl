@@ -26,7 +26,7 @@ func (input SprintIssueInput) RequireDetail() bool {
 }
 
 func GetSprintIssue(board, sprint, format string, detail bool, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) {
-	input := SprintIssueInput{Board: board, Sprint: sprint}
+	input := SprintIssueInput{Board: board, Sprint: sprint, Detail: detail}
 	a := api.NewJiraAPI(iapi)
 	db := database.NewConfig(ds)
 	p := presenter.NewSprintPresenter(viewer, format)

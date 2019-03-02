@@ -18,7 +18,7 @@ func NewIssueCmd(format string, iapi api.IAPI, ds database.IDataStore, viewer pr
 		Short: "list sprint related issues",
 		Long:  "get sprint issues",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			controller.GetSprintIssue(board, sprint, format, iapi, ds, viewer)
+			controller.GetSprintIssue(board, sprint, format, detail, iapi, ds, viewer)
 			return nil
 		},
 	}
