@@ -22,3 +22,7 @@ type ICurrentContextDataAccess interface {
 	AddCurrentContext(name string) *entity.Current
 	GetCurrentContext() (*entity.Current, error)
 }
+
+type ITeamDataAccess interface {
+	AddTeam(board, sprint string) *entity.JiraTeam
+}

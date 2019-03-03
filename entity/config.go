@@ -38,3 +38,9 @@ type Me struct {
 	EmailAddress string
 	AccountID    string
 }
+
+// JiraTeam has information of team
+type JiraTeam struct {
+	SprintName string
+	BoardName  string
+}
