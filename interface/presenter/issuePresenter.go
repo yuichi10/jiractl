@@ -42,7 +42,7 @@ func markdownIssuePresenter(out usecase.IssuesOutput, detail bool) Lines {
 		if detail {
 			l.Body = fmt.Sprintf("[%s](%s) %s %s", issue.Summary, issue.URL, issue.Status, issue.Assignee)
 		} else {
-			l.Body = fmt.Sprintf("[%s][%s]", issue.Summary, issue.URL)
+			l.Body = fmt.Sprintf("[%s](%s)", issue.Summary, issue.URL)
 		}
 		l.Delimiter = "\n"
 		if issue.IssueType == "ストーリー" || issue.IssueType == "Story" {
