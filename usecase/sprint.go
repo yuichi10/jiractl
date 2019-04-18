@@ -10,6 +10,7 @@ type ISprintIssuesInput interface {
 	GetBoardName() string
 	GetSprintName() string
 	RequireDetail() bool
+	OutputFormat() string
 }
 
 // GetSprintIssues get apis
@@ -44,5 +45,5 @@ func GetSprintIssues(input ISprintIssuesInput, api IJiraAPIAccess, db ICurrentCo
 		}
 		output = append(output, o)
 	}
-	presenter.IssuePresent(output, "markdown", input.RequireDetail())
+	presenter.IssuePresent(output, input.OutputFormat(), input.RequireDetail())
 }

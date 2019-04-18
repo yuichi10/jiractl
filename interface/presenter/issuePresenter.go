@@ -9,6 +9,24 @@ import (
 	"github.com/yuichi10/jiractl/usecase"
 )
 
+const story = 1
+const subTask = 2
+const task = 3
+const issue = 4
+
+var sortStatus = func(out usecase.IssuesOutput) {
+	sort.SliceStable(out, func(i, j int) bool { return out[i].Status < out[j].Status })
+}
+var sortIssueType = func(out usecase.IssuesOutput) {
+	sort.SliceStable(out, func(i, j int) bool {
+		return issueTypeSortNumber(out[i].IssueType) < issueTypeSortNumber(out[j].IssueType)
+	})
+}
+
+// var sortIssueType = func(*out usecase.IssueOutput) {
+// 	return issueTypeSortNumber(out[i].IssueType) < issueTypeSortNumber(out[j].IssueType)
+// }
+
 type SprintPresenter struct {
 	View   Viewer
 	Format string
@@ -23,6 +41,8 @@ func (ip SprintPresenter) IssuePresent(out usecase.IssuesOutput, format string, 
 	humble := Lines{}
 	if format == "markdown" {
 		humble = markdownIssuePresenter(out, detail)
+	} else if format == "only-url" {
+		humble = onlyURLIssuePresenter(out)
 	}
 	ip.View.Show(humble)
 }
@@ -44,6 +64,36 @@ func markdownIssuePresenter(out usecase.IssuesOutput, detail bool) Lines {
 		} else {
 			l.Body = fmt.Sprintf("[%s](%s)", issue.Summary, issue.URL)
 		}
+		l.Delimiter = "\n"
+		if issue.IssueType == "ストーリー" || issue.IssueType == "Story" {
+			storyOnce.Do(func() { humble = append(humble, &Line{Body: "Story", Color: "97", Delimiter: "\n"}) })
+			l.Color = "36"
+		} else if issue.IssueType == "サブタスク" || issue.IssueType == "SubTask" {
+			subTaskOnce.Do(func() { humble = append(humble, &Line{Body: "SubTask", Color: "97", Delimiter: "\n"}) })
+			l.Color = "34"
+		} else if issue.IssueType == "タスク" || issue.IssueType == "Task" {
+			taskOnce.Do(func() { humble = append(humble, &Line{Body: "Task", Color: "97", Delimiter: "\n"}) })
+			l.Color = "33"
+		} else if issue.IssueType == "改善" || issue.IssueType == "Issue" {
+			issueOnce.Do(func() { humble = append(humble, &Line{Body: "Issue", Color: "97", Delimiter: "\n"}) })
+			l.Color = "95"
+		}
+		humble = append(humble, l)
+	}
+	return humble
+}
+
+func onlyURLIssuePresenter(out usecase.IssuesOutput) Lines {
+	sortIssueType(out)
+	sortStatus(out)
+	var storyOnce sync.Once
+	var subTaskOnce sync.Once
+	var taskOnce sync.Once
+	var issueOnce sync.Once
+	humble := make(Lines, 0, 50)
+	for _, issue := range out {
+		l := &Line{}
+		l.Body = fmt.Sprintf("%s", issue.URL)
 		l.Delimiter = "\n"
 		if issue.IssueType == "ストーリー" || issue.IssueType == "Story" {
 			storyOnce.Do(func() { humble = append(humble, &Line{Body: "Story", Color: "97", Delimiter: "\n"}) })

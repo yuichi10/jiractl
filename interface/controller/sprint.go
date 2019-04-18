@@ -8,9 +8,11 @@ import (
 )
 
 type SprintIssueInput struct {
-	Board  string
-	Sprint string
-	Detail bool
+	Board   string
+	Sprint  string
+	Detail  bool
+	OnlyURL bool
+	Format  string
 }
 
 func (input SprintIssueInput) GetBoardName() string {
@@ -23,6 +25,13 @@ func (input SprintIssueInput) GetSprintName() string {
 
 func (input SprintIssueInput) RequireDetail() bool {
 	return input.Detail
+}
+
+func (input SprintIssueInput) OutputFormat() string {
+	if input.OnlyURL {
+		return "only-url"
+	}
+	return "markdown"
 }
 
 func GetSprintIssue(board, sprint, format string, detail bool, iapi api.IAPI, ds database.IDataStore, viewer presenter.Viewer) {
